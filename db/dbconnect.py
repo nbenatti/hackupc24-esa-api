@@ -1,3 +1,4 @@
+import json
 from influxdb import InfluxDBClient
 
 class DBConnector:
@@ -7,19 +8,24 @@ class DBConnector:
         """
         client = InfluxDBClient(dbHost, dbPort, dbUsr, dbPwd)
         client.switch_database("gnss_testdata")
-        return client
-
-""" for table in result:
-    for row in table:
-        print(row) """
+        return DB(client)
 
 class DB:
     def __init__(self, client):
         self.client = client
 
     def dumpTable(self, tableName):
-        """
-        Dump all the data present 
-        """
+        res = ""
         self.result = self.client.query("select * from " + tableName + ";")
-        return self.result
+        for table in self.result:
+            for row in table:
+                res += json.dumps(row)
+        return res
+    
+    def topK(self, tableName, k):
+        res = []
+        self.result = self.client.query("select * from " + tableName + ";")
+        for table in self.result:
+            for i in range(0, k):
+                res.append(table[i])
+        return res
