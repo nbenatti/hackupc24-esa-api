@@ -13,3 +13,7 @@ app = FastAPI()
 @app.get("/dumptable/{tablename}")
 async def dump_table(tablename):
     return db.dumpTable(tablename)
+
+@app.get("/topk/{tablename}")
+async def topk(tablename, k : int = 1):
+    return db.topK(tablename, k)
