@@ -14,18 +14,25 @@ class DB:
     def __init__(self, client):
         self.client = client
 
-    def dumpTable(self, tableName):
-        res = ""
-        self.result = self.client.query("select * from " + tableName + ";")
+    def _fetchAll(self):
+        res = []
         for table in self.result:
             for row in table:
-                res += json.dumps(row)
+                res.append(row)
         return res
+
+    def dumpTable(self, tableName):
+        self.result = self.client.query(f"select * from {tableName}")
+        return self._fetchAll()
     
     def topK(self, tableName, k):
         res = []
-        self.result = self.client.query("select * from " + tableName + ";")
+        self.result = self.client.query(f"select * from {tableName}")
         for table in self.result:
             for i in range(0, k):
                 res.append(table[i])
         return res
+
+    def getByConstellationType(self, tableName, constellType):
+        self.result = self.client.query(f"select * from {tableName} where ConstellationType = {constellType}")
+        return self._fetchAll()

@@ -10,10 +10,14 @@ DB_PWD = "43238c95fd3e9450"
 db = dbc.DBConnector.connect(DB_HOST, DB_PORT, DB_USR, DB_PWD)
 app = FastAPI()
 
-@app.get("/dumptable/{tablename}")
+@app.get("/{tablename}/dumptable")
 async def dump_table(tablename):
     return db.dumpTable(tablename)
 
-@app.get("/topk/{tablename}")
+@app.get("/{tablename}/topk")
 async def topk(tablename, k : int = 1):
     return db.topK(tablename, k)
+
+@app.get("/{tableName}/constellation/")
+async def get_by_constellation_type(tableName, type : int = 1):
+    return db.getByConstellationType(tableName, type)
