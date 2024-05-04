@@ -21,3 +21,7 @@ async def topk(tablename, k : int = 1):
 @app.get("/{tableName}/constellation/")
 async def get_by_constellation_type(tableName, type : int = 1):
     return db.getByConstellationType(tableName, type)
+
+@app.get("/getlocations")
+async def get_locations(threshold : float = 1.0):
+    return db.getLocationsNotFurtherThan(threshold)

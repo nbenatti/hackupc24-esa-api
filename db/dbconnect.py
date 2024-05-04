@@ -67,3 +67,7 @@ class DB:
     def getByConstellationType(self, tableName, constellType):
         self.result = self.client.query(f"select * from {tableName} where ConstellationType = {constellType}")
         return self._fetchAll()
+    
+    def getLocationsNotFurtherThan(self, threshold):
+        self.result = self.client.query(f"select * from Fix where AccuracyMeters <= {threshold}")
+        return self._fetchAll()
