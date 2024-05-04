@@ -41,7 +41,6 @@ class DB:
             biasNanos = record["BiasNanos"]
             weekNumberNanos = 604800E9
             rx = (timeNanos + timeOffsetNanos - (fullBiasNanos + biasNanos)) - weekNumberNanos
-            print(record["ReceivedSvTimeNanos"])
             record["Pseudorange"] = self._computePseudoRange(record["ReceivedSvTimeNanos"], rx)
             record["GNSSTime"] = rx - timeOffsetNanos
 
@@ -58,7 +57,7 @@ class DB:
     
     def topK(self, tableName, k):
         res = []
-        self.result = self.client.query(f"select * from {tableName}")
+        self.result = self.client.query(f"select * from {tableName} order by time desc")
         for table in self.result:
             for i in range(0, k):
                 res.append(table[i])
