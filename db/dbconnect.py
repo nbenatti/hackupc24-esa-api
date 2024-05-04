@@ -39,7 +39,8 @@ class DB:
             timeOffsetNanos = record["TimeOffsetNanos"]
             fullBiasNanos = record["FullBiasNanos"]
             biasNanos = record["BiasNanos"]
-            rx = timeNanos + timeOffsetNanos - (fullBiasNanos + biasNanos)
+            weekNumberNanos = 604800E9
+            rx = (timeNanos + timeOffsetNanos - (fullBiasNanos + biasNanos)) - weekNumberNanos
             print(record["ReceivedSvTimeNanos"])
             record["Pseudorange"] = self._computePseudoRange(record["ReceivedSvTimeNanos"], rx)
             record["GNSSTime"] = rx - timeOffsetNanos
