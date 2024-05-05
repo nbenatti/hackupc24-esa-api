@@ -1,3 +1,3 @@
-# hackupc24-esa-backend
+# hackupc24-esa
 
 ![Gatos](Gatos.jpg)
