@@ -14,6 +14,7 @@ class DBConnector:
 class DB:
     def __init__(self, client):
         self.client = client
+        self.windowIdx = 0
 
     def _computeGNSSTime(time, fullBias, bias):
         """
@@ -49,16 +50,27 @@ class DB:
         for table in self.result:
             for row in table:
                 res.append(row)
+        self._addGNSSParameters(res)
         return res
 
     def dumpTable(self, tableName):
         self.result = self.client.query(f"select * from {tableName}")
         return self._fetchAll()
     
-    def topK(self, tableName, k):
+    def topK(self, tableName, k, incremental = False):
         res = []
-        self.result = self.client.query(f"select * from {tableName} order by time desc limit {k}")
-        return self._fetchAll()
+        if incremental == False:
+            self.result = self.client.query(f"select * from {tableName} order by time desc limit {k}")
+            return self._fetchAll()
+        else:
+            if self.windowIdx < 1:
+                res = []
+                self.result = self.client.query(f"select * from {tableName} order by time desc")
+            for table in self.result:
+                for i in range(self.windowIdx*k, (self.windowIdx+1)*k):
+                    res.append(table[i])
+                self.windowIdx += 1
+            return res
 
     def getByConstellationType(self, tableName, constellType):
         self.result = self.client.query(f"select * from {tableName} where ConstellationType = {constellType}")

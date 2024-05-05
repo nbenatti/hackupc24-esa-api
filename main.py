@@ -16,7 +16,11 @@ async def dump_table(tablename):
 
 @app.get("/{tablename}/mostrecent")
 async def topk(tablename, k : int = 1):
-    return db.topK(tablename, k)
+    return db.topK(tablename, k, False)
+
+@app.get("/{tablename}/mostrecent/incr")
+async def topk(tablename, k : int = 1):
+    return db.topK(tablename, k, True)
 
 @app.get("/{tableName}/constellation/")
 async def get_by_constellation_type(tableName, type : int = 1):
