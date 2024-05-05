@@ -13,18 +13,22 @@ client.create_database(DBNAME)
 client.switch_database(DBNAME)
 
 # query data
-result = requests.get("http://localhost:8000/Raw/mostrecent")
-json_data = result.json()
-res = []
-for data in json_data:
-    send_data = {
-        "measurement": "Raw",
-        "time": data["time"],
-        "fields": {
-            "Cn0DbHz": data['Cn0DbHz'],
-            "Pseudorange": data['Pseudorange'],
-            "GNSSTIME": data['GNSSTime']
+while(True):
+    result = requests.get("http://localhost:8000/Raw/mostrecent/incr?k=5")
+    json_data = result.json()
+    res = []
+    for data in json_data:
+        send_data = {
+            "measurement": "Raw",
+            "time": data["time"],
+            "fields": {
+                "Cn0DbHz": data['Cn0DbHz'],
+                "ConstellationType": data['ConstellationType'],
+                "SvidTag": data['SvidTag'],
+                "Pseudorange": data['Pseudorange'],
+                "GNSSTime": data['GNSSTime']
+            }
         }
-    }
-    res.append(send_data)
-client.write_points(res)
+        print(send_data)
+        res.append(send_data)
+    client.write_points(res)

@@ -65,11 +65,12 @@ class DB:
         else:
             if self.windowIdx < 1:
                 res = []
-                self.result = self.client.query(f"select * from {tableName} order by time desc")
+                self.result = self.client.query(f"select * from {tableName} order by time asc")
             for table in self.result:
                 for i in range(self.windowIdx*k, (self.windowIdx+1)*k):
                     res.append(table[i])
                 self.windowIdx += 1
+            self._addGNSSParameters(res)
             return res
 
     def getByConstellationType(self, tableName, constellType):
